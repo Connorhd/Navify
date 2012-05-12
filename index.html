@@ -10,10 +10,30 @@
 		<script type="text/javascript" src="js/backbone-min.js"></script>
 	    <script type="text/javascript" src="js/core.js"></script>
 		<style>
-			#columns {
+			#topbar {
+				position: absolute;
 				top: 0;
 				width: 100%;
-				height: 248px;
+				height: 31px;
+				background: url(../img/tab-bar-bg.png);
+			}
+			#topbar input {
+				width: 200px;
+				float: right;
+				margin: 5px 10px;
+				border: 1px solid #222;
+				border-radius: 5px;
+				background: #444;
+				color: #bbb;
+				font-size: 0.9em;
+				padding: 2px 5px;
+			}
+			#columns {
+				position: absolute;
+				top: 31px;
+				width: 100%;
+				height: 197px;
+				padding-bottom: 20px;
 				border-bottom: 2px solid #222;
 			}
 			.sp-list {
@@ -27,11 +47,21 @@
 				width: 33%;
 				float: left;
 				height: 100%;
-				overflow: auto;
 			}
 			.lastcolumn {
 				width: 34%;
 				float: right
+			}
+			.column .title {
+				font-size: 0.9em;
+				background-color: #eee;
+				height: 20px;
+				color: black;
+				padding: 0 10px;
+			}
+			.column-scroll {
+				height: 100%;
+				overflow: auto;
 			}
 			.column-inner {
 				background-color: #373737;
@@ -61,35 +91,14 @@
 		</style>
 	</head>
 	<body>
+		<div id="topbar">
+			<input type="text">
+		</div>
 		<div id="columns">
 			<div class="column" tabindex="0">
+				Test
 				<div class="column-inner">
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
-					<div class="item">Test</div>
+					<div class="item">Playlists</div>
 				</div>
 			</div>
 		</div>

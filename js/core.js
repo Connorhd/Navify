@@ -104,7 +104,8 @@ var Column = Backbone.View.extend({
 	},
 	render: function () {
 		this.$el.attr('tabindex', 0);
-		this.$el.append('<div class="column-inner"></div>');
+		this.$el.append('<div class="title">'+this.options.title+'</div>');
+		this.$el.append('<div class="column-scroll"><div class="column-inner"></div></div>');
 		return this;
 	}
 });
@@ -149,14 +150,16 @@ $(function(){
 	
 	artistsCollection = new Set();
 	var artistsView = new Column({
-		collection: artistsCollection
+		collection: artistsCollection,
+		title: "Artists"
 	});
 	artistsView.render();
 	$('#columns').append(artistsView.el);
 	
 	albumsCollection = new Set();
 	var albumsView = new Column({
-		collection: albumsCollection
+		collection: albumsCollection,
+		title: "Albums"
 	});
 	albumsView.render();
 	albumsView.$el.addClass('lastcolumn');
