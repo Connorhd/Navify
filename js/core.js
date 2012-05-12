@@ -16,11 +16,11 @@ function handleLinks() {
 }
 
 // Backbone setup
-var Artist = Backbone.Model.extend({
+var Item = Backbone.Model.extend({
 	idAttribute: 'uri'
 });
-var Artists = Backbone.Collection.extend({
-	model: Artist
+var Set = Backbone.Collection.extend({
+	model: Item
 });
 
 var Column = Backbone.View.extend({
@@ -31,7 +31,8 @@ var Column = Backbone.View.extend({
 	initialize: function () {
 		var self = this;
 		this.collection.on('add', function (added) {
-			self.$el.find('.column-inner').append('<div class="item">'+added.get('name')+'</div>');
+			var element = $('<div class="item"></div>').text(added.get('name'));
+			self.$el.find('.column-inner').append(element);
 		});
 	},
 	render: function () {
@@ -45,22 +46,30 @@ var Column = Backbone.View.extend({
 $(function(){
 	console.log('Loaded.');
 
-	artistsCollection = new Artists();
+	// Run on application load
+	handleLinks();
+	
+	artistsCollection = new Set();
 	var artistsView = new Column({
 		collection: artistsCollection
 	});
 	artistsView.render();
 	$('#columns').append(artistsView.el);
 	
-	// Run on application load
-	handleLinks();
-	
+	albumsCollection = new Set();
+	var albumsView = new Column({
+		collection: albumsCollection
+	});
+	albumsView.render();
+	albumsView.$el.addClass('lastcolumn');
+	$('#columns').append(albumsView.el);
+
 	var tempPlaylist = new models.Playlist();
 	
 	// Load in users library
 	models.library.tracks.forEach(function (track) {
-		artistsCollection.add(new Artist(track.data.artists[0]));
-
+		artistsCollection.add(new Item(track.data.artists[0]));
+		albumsCollection.add(new Item(track.data.album));
 		tempPlaylist.add(track);
 	});
 	var FIELD = {
