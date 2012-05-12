@@ -33,11 +33,19 @@ function handleLinks() {
 
 // Backbone setup
 var Item = Backbone.Model.extend({
-	idAttribute: 'uri'
+	idAttribute: 'uri',
+	addToFilter: function () {
+		filter.add(this);
+	},
+	removeFromFilter: function () {
+		filter.remove(this);
+	}
 });
 var Set = Backbone.Collection.extend({
 	model: Item
 });
+
+var filter = new Set();
 
 var Column = Backbone.View.extend({
 	tagName: "div",
@@ -55,8 +63,10 @@ var Column = Backbone.View.extend({
 				if (i >= start && i <= end) {
 					if (selected) {
 						$(x).addClass('selected');
+						$(x).data('model').addToFilter();
 					} else {
 						$(x).removeClass('selected');
+						$(x).data('model').removeFromFilter();
 					}
 				}
 			});
@@ -64,18 +74,31 @@ var Column = Backbone.View.extend({
 			$(e.target).addClass('lastclicked');
 		} else {
 			$(e.target).parent().find('.item').removeClass('lastclicked');
-			$(e.target).toggleClass('selected').addClass('lastclicked');
+			if ($(e.target).hasClass('selected')) {
+				$(e.target).removeClass('selected').addClass('lastclicked');
+				$(e.target).data('model').removeFromFilter();
+			} else {
+				$(e.target).addClass('selected').addClass('lastclicked');
+				$(e.target).data('model').addToFilter();
+			}
 		}
+		filter.trigger('update');
 	},
 	itemDblClick: function (e) {
-		$(e.target).parent().find('.item').removeClass('selected').removeClass('lastclicked');
+		$(e.target).parent().find('.item').each(function (i, element) {
+			$(element).removeClass('selected').removeClass('lastclicked');
+			$(element).data('model').removeFromFilter();
+		});
 		$(e.target).addClass('selected').addClass('lastclicked');
+		$(e.target).data('model').addToFilter();
+		filter.trigger('update');
 	},
 	initialize: function () {
 		var self = this;
 		this.collection.on('add', function (added) {
 			// TODO: ordering, other events?
 			var element = $('<div class="item"></div>').html(added.get('name'));
+			element.data('model', added);
 			self.$el.find('.column-inner').append(element);
 		});
 	},
@@ -92,14 +115,23 @@ var TrackList = Backbone.View.extend({
 	},
 	initialize: function () {
 		var self = this;
-		this.collection.on('all', function (added) {
-			// TODO: be cleverer
+		// TODO: be cleverer
+		this.collection.on('all', function () {
+			self.render();
+		});
+		filter.on('update', function () {
 			self.render();
 		});
 	},
 	render: function () {
 		var tempPlaylist = new models.Playlist();
-		this.collection.forEach(function (track) {
+		this.collection.filter(function (track) { 
+			if (filter.get(track.get('artists')[0].uri)) {
+				return true; 
+			} else {
+				return false;
+			}
+		}).forEach(function (track) {
 			tempPlaylist.add(models.Track.fromURI(track.id));
 		});
 		var playlistList = new views.List(tempPlaylist, function (track) { return new views.Track(track, FIELD.ALBUM | FIELD.NAME | FIELD.ARTIST | FIELD.STAR | FIELD.DURATION);});
