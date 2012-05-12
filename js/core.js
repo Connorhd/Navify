@@ -23,8 +23,12 @@ $(function(){
 	
 	var tempPlaylist = new models.Playlist();
 	
+	var artists = [];
 	// Load in users library
 	models.library.tracks.forEach(function (track) {
+		if (artists.indexOf(track.data.artists[0].name) == -1) {
+			artists.push(track.data.artists[0].name);
+		}
 		tempPlaylist.add(track);
 	});
 	var FIELD = {
@@ -45,5 +49,8 @@ $(function(){
 	var playlistList = new views.List(tempPlaylist, function (track) { return new views.Track(track, FIELD.ALBUM | FIELD.NAME | FIELD.ARTIST | FIELD.STAR | FIELD.DURATION);});
 	$("#tracks").empty();
 	$("#tracks").append(playlistList.node);
-						
+	$("#artists").empty();
+	artists.forEach(function (artist) {
+		$("#artists").append('<div class="item">'+artist+'</div>');
+	});
 });
