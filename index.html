@@ -59,33 +59,6 @@
 				color: #2B3844;
 			}
 		</style>
-		<script>
-			$('.item').live('click', function (e) {
-				if (e.shiftKey && $(this).parent().find('.lastclicked').length == 1) {
-					var selected = $(this).parent().find('.lastclicked').hasClass('selected');
-					var start = Math.min($(this).index(), $(this).parent().find('.lastclicked').index());
-					var end = Math.max($(this).index(), $(this).parent().find('.lastclicked').index());
-					$(this).parent().children().each(function (i, x) {
-						if (i >= start && i <= end) {
-							if (selected) {
-								$(x).addClass('selected');
-							} else {
-								$(x).removeClass('selected');
-							}
-						}
-					});
-					$(this).parent().find('.item').removeClass('lastclicked');
-					$(this).addClass('lastclicked');
-				} else {
-					$(this).parent().find('.item').removeClass('lastclicked');
-					$(this).toggleClass('selected').addClass('lastclicked');
-				}
-			});
-			$('.item').live('dblclick', function (e) {
-				$(this).parent().find('.item').removeClass('selected').removeClass('lastclicked');
-				$(this).addClass('selected').addClass('lastclicked');
-			});
-		</script>
 	</head>
 	<body>
 		<div id="columns">

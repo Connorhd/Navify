@@ -43,11 +43,38 @@ var Column = Backbone.View.extend({
 	tagName: "div",
 	className: "column",
 	events: {
+		"click .item": "itemClick",
+		"dblclick .item": "itemDblClick"
+	},
+	itemClick: function (e) {
+		if (e.shiftKey && $(e.target).parent().find('.lastclicked').length == 1) {
+			var selected = $(e.target).parent().find('.lastclicked').hasClass('selected');
+			var start = Math.min($(e.target).index(), $(e.target).parent().find('.lastclicked').index());
+			var end = Math.max($(e.target).index(), $(e.target).parent().find('.lastclicked').index());
+			$(e.target).parent().children().each(function (i, x) {
+				if (i >= start && i <= end) {
+					if (selected) {
+						$(x).addClass('selected');
+					} else {
+						$(x).removeClass('selected');
+					}
+				}
+			});
+			$(e.target).parent().find('.item').removeClass('lastclicked');
+			$(e.target).addClass('lastclicked');
+		} else {
+			$(e.target).parent().find('.item').removeClass('lastclicked');
+			$(e.target).toggleClass('selected').addClass('lastclicked');
+		}
+	},
+	itemDblClick: function (e) {
+		$(e.target).parent().find('.item').removeClass('selected').removeClass('lastclicked');
+		$(e.target).addClass('selected').addClass('lastclicked');
 	},
 	initialize: function () {
 		var self = this;
 		this.collection.on('add', function (added) {
-			// TODO: ordering?
+			// TODO: ordering, other events?
 			var element = $('<div class="item"></div>').html(added.get('name'));
 			self.$el.find('.column-inner').append(element);
 		});
