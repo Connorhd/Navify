@@ -148,14 +148,6 @@ $(function(){
 	// Run on application load
 	handleLinks();
 	
-	artistsCollection = new Set();
-	var artistsView = new Column({
-		collection: artistsCollection,
-		title: "Artists"
-	});
-	artistsView.render();
-	$('#columns').append(artistsView.el);
-	
 	albumsCollection = new Set();
 	var albumsView = new Column({
 		collection: albumsCollection,
@@ -164,6 +156,22 @@ $(function(){
 	albumsView.render();
 	albumsView.$el.addClass('lastcolumn');
 	$('#columns').append(albumsView.el);
+	
+	artistsCollection = new Set();
+	var artistsView = new Column({
+		collection: artistsCollection,
+		title: "Artists"
+	});
+	artistsView.render();
+	$('#columns').append(artistsView.el);
+	
+	playlistCollection = new Set();
+	var playlistView = new Column({
+		collection: playlistCollection,
+		title: "Playlists"
+	});
+	playlistView.render();
+	$('#columns').append(playlistView.el);
 	
 	tracksCollection = new Set();
 	var tracksView = new TrackList({

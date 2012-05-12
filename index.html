@@ -32,8 +32,8 @@
 				position: absolute;
 				top: 31px;
 				width: 100%;
-				height: 197px;
-				padding-bottom: 20px;
+				height: 198px;
+				padding-bottom: 19px;
 				border-bottom: 2px solid #222;
 			}
 			.sp-list {
@@ -45,17 +45,22 @@
 			
 			.column {
 				width: 33%;
-				float: left;
+				float: right;
 				height: 100%;
+
 			}
 			.lastcolumn {
 				width: 34%;
 				float: right
 			}
 			.column .title {
-				font-size: 0.9em;
-				background-color: #eee;
-				height: 20px;
+				font-size: 10px;
+				font-weight: bold;
+				background-color: #a8a8a8;
+				height: 17px;
+				line-height: 17px;
+				border-top: 1px solid #a4a4a4;
+				border-bottom: 1px solid #292929;
 				color: black;
 				padding: 0 10px;
 			}
@@ -68,6 +73,7 @@
 				background-image: -webkit-linear-gradient(top, #373737, #373737 50%, #313131 50%, #313131);
 				background-size: 40px 40px;
 				width: 100%;
+				min-height: 100%;
 			}
 			.column .item {
 				height: 20px;
@@ -95,12 +101,6 @@
 			<input type="text">
 		</div>
 		<div id="columns">
-			<div class="column" tabindex="0">
-				Test
-				<div class="column-inner">
-					<div class="item">Playlists</div>
-				</div>
-			</div>
 		</div>
 	</body>
 </html>
