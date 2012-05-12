@@ -48,7 +48,7 @@ var Column = Backbone.View.extend({
 		var self = this;
 		this.collection.on('add', function (added) {
 			// TODO: ordering?
-			var element = $('<div class="item"></div>').text(added.get('name'));
+			var element = $('<div class="item"></div>').html(added.get('name'));
 			self.$el.find('.column-inner').append(element);
 		});
 	},
