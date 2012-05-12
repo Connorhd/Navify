@@ -58,6 +58,10 @@
 			$('.item').live('click', function (e) {
 				$(this).toggleClass('selected');
 			});
+			$('.item').live('dblclick', function (e) {
+				$(this).parent().find('.item').removeClass('selected');
+				$(this).addClass('selected');
+			});
 		</script>
 	</head>
 	<body>
