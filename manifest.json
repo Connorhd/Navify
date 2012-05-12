@@ -1,13 +1,13 @@
 {
 	"BundleType": "Application",
-	"BundleIdentifier": "advnav",
+	"BundleIdentifier": "navify",
 	"BundleVersion": "1.0",
 	"RequiredInterface": 1,
 	"AppIcon": {
 		"18x18": "icon.png"
 	},
 	"AppName": {
-		"en": "Advanced Nav"
+		"en": "Navify"
 	},
 	"SupportedLanguages": [
 		"en"
