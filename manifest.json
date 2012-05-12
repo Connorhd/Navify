@@ -1,0 +1,18 @@
+{
+	"BundleType": "Application",
+	"BundleIdentifier": "advnav",
+	"BundleVersion": "1.0",
+	"RequiredInterface": 1,
+	"AppIcon": {
+		"18x18": "icon.png"
+	},
+	"AppName": {
+		"en": "Advanced Nav"
+	},
+	"SupportedLanguages": [
+		"en"
+	],
+	"AcceptedLinkTypes":[
+		"playlist"
+	],
+}
