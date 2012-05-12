@@ -12,7 +12,7 @@
 	"SupportedLanguages": [
 		"en"
 	],
-	"AcceptedLinkTypes":[
+	"AcceptedLinkTypes": [
 		"playlist"
-	],
+	]
 }

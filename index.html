@@ -14,30 +14,131 @@
 				height: 198px;
 				border-bottom: 2px solid #222;
 			}
-			.column {
-				width: 33%;
-				float: left;
-				height: 100%;
-				overflow: auto;
-			}
 			.sp-list {
 				position: absolute;
 				bottom: 0;
 				top: 200px;
 				max-height: 100% !important;
 			}
+			
+			.column {
+				width: 33%;
+				float: left;
+				height: 100%;
+				overflow: auto;
+			}
+			.lastcolumn {
+				width: 34%;
+				float: right
+			}
+			.column-inner {
+				background-color: #373737;
+				background-image: -webkit-linear-gradient(top, #373737, #373737 50%, #313131 50%, #313131);
+				background-size: 40px 40px;
+				width: 100%;
+			}
+			.column .item {
+				height: 20px;
+				padding: 0 5px;
+				color: #DDD;
+				line-height: 20px;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="columns">
 			<div class="column">
-				All playlists [23]<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test
+				<div class="column-inner">
+					<div class="item">All playlists [23]</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+				</div>
 			</div>
 			<div class="column">
-				All artists [59]<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test
+				<div class="column-inner">
+					<div class="item">All artists [35]</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+				</div>
 			</div>
-			<div class="column" style="width: 34%; float: right">
-				All albums [154]<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test
+			<div class="column lastcolumn" style="width: 34%; float: right">
+				<div class="column-inner">
+					<div class="item">All albumns [89]</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+					<div class="item">Test</div>
+				</div>
 			</div>
 		</div>
 		<div id="tracks"></div>
