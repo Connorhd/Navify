@@ -7,6 +7,22 @@ var sp = getSpotifyApi(1),
 	library = models.library,
 	application = models.application
 
+var FIELD = {
+	ALBUM:      1 << 0,
+	ARTIST:     1 << 1,
+	DOWNLOAD:   1 << 2,
+	DURATION:   1 << 3,
+	IMAGE:      1 << 4,
+	NAME:       1 << 5,
+	NUMBER:     1 << 6,
+	POPULARITY: 1 << 7,
+	PURCHASE:   1 << 8,
+	SHARE:      1 << 9,
+	STAR:       1 << 10,
+	TRACK:      1 << 11,
+	USER:       1 << 12
+};
+	
 // Handle items 'dropped' on your icon
 application.observe(models.EVENT.LINKSCHANGED, handleLinks);
 
@@ -31,6 +47,7 @@ var Column = Backbone.View.extend({
 	initialize: function () {
 		var self = this;
 		this.collection.on('add', function (added) {
+			// TODO: ordering?
 			var element = $('<div class="item"></div>').text(added.get('name'));
 			self.$el.find('.column-inner').append(element);
 		});
@@ -38,6 +55,28 @@ var Column = Backbone.View.extend({
 	render: function () {
 		this.$el.attr('tabindex', 0);
 		this.$el.append('<div class="column-inner"></div>');
+		return this;
+	}
+});
+
+var TrackList = Backbone.View.extend({
+	tagName: "div",
+	events: {
+	},
+	initialize: function () {
+		var self = this;
+		this.collection.on('all', function (added) {
+			// TODO: be cleverer
+			self.render();
+		});
+	},
+	render: function () {
+		var tempPlaylist = new models.Playlist();
+		this.collection.forEach(function (track) {
+			tempPlaylist.add(models.Track.fromURI(track.id));
+		});
+		var playlistList = new views.List(tempPlaylist, function (track) { return new views.Track(track, FIELD.ALBUM | FIELD.NAME | FIELD.ARTIST | FIELD.STAR | FIELD.DURATION);});
+		this.$el.empty().append(playlistList.node);
 		return this;
 	}
 });
@@ -63,31 +102,21 @@ $(function(){
 	albumsView.render();
 	albumsView.$el.addClass('lastcolumn');
 	$('#columns').append(albumsView.el);
-
-	var tempPlaylist = new models.Playlist();
+	
+	tracksCollection = new Set();
+	var tracksView = new TrackList({
+		collection: tracksCollection
+	});
+	tracksView.render();
+	$('body').append(tracksView.el);
 	
 	// Load in users library
 	models.library.tracks.forEach(function (track) {
 		artistsCollection.add(new Item(track.data.artists[0]));
 		albumsCollection.add(new Item(track.data.album));
-		tempPlaylist.add(track);
+		// Silent because adding is pretty slow if we do a lot at once
+		tracksCollection.add(new Item(track.data), {silent: true});
 	});
-	var FIELD = {
-		ALBUM:      1 << 0,
-		ARTIST:     1 << 1,
-		DOWNLOAD:   1 << 2,
-		DURATION:   1 << 3,
-		IMAGE:      1 << 4,
-		NAME:       1 << 5,
-		NUMBER:     1 << 6,
-		POPULARITY: 1 << 7,
-		PURCHASE:   1 << 8,
-		SHARE:      1 << 9,
-		STAR:       1 << 10,
-		TRACK:      1 << 11,
-		USER:       1 << 12
-	};
-	var playlistList = new views.List(tempPlaylist, function (track) { return new views.Track(track, FIELD.ALBUM | FIELD.NAME | FIELD.ARTIST | FIELD.STAR | FIELD.DURATION);});
-	$("#tracks").empty();
-	$("#tracks").append(playlistList.node);
+	// Force a track list update
+	tracksCollection.trigger('update');
 });
