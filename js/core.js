@@ -112,6 +112,7 @@ var Column = Backbone.View.extend({
 
 var TrackList = Backbone.View.extend({
 	tagName: "div",
+	className: "tracks",
 	events: {
 	},
 	initialize: function () {
@@ -136,7 +137,7 @@ var TrackList = Backbone.View.extend({
 			tempPlaylist.add(models.Track.fromURI(track.id));
 		});
 		var playlistList = new views.List(tempPlaylist, function (track) { return new views.Track(track, FIELD.ALBUM | FIELD.NAME | FIELD.ARTIST | FIELD.STAR | FIELD.DURATION);});
-		this.$el.empty().append(playlistList.node);
+		this.$el.empty().append('<div class="title"></div>').append(playlistList.node);
 		return this;
 	}
 });
