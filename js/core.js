@@ -52,7 +52,15 @@ var Column = Backbone.View.extend({
 	className: "column",
 	events: {
 		"click .item": "itemClick",
+		"click .selall": "selallClick",
 		"dblclick .item": "itemDblClick"
+	},
+	selallClick: function (e) {
+		this.$el.find('.item').each(function (i, element) {
+			$(element).addClass('selected').removeClass('lastclicked');
+			$(element).data('model').addToFilter();
+		});
+		filter.trigger('update');
 	},
 	itemClick: function (e) {
 		if (e.shiftKey && $(e.target).parent().find('.lastclicked').length == 1) {
@@ -104,7 +112,7 @@ var Column = Backbone.View.extend({
 	},
 	render: function () {
 		this.$el.attr('tabindex', 0);
-		this.$el.append('<div class="title">'+this.options.title+'</div>');
+		this.$el.append('<div class="title">'+this.options.title+'<span class="selall">[select all]</span></div>');
 		this.$el.append('<div class="column-scroll"><div class="column-inner"></div></div>');
 		return this;
 	}
@@ -185,6 +193,7 @@ $(function(){
 	models.library.tracks.forEach(function (track) {
 		artistsCollection.add(new Item(track.data.artists[0]));
 		albumsCollection.add(new Item(track.data.album));
+		
 		// Silent because adding is pretty slow if we do a lot at once
 		tracksCollection.add(new Item(track.data), {silent: true});
 	});
