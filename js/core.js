@@ -108,6 +108,23 @@ var Column = Backbone.View.extend({
 			var element = $('<div class="item"></div>').html(added.get('name'));
 			element.data('model', added);
 			self.$el.find('.column-inner').append(element);
+			self.updateFilter();
+		});
+		filter.on('update', function () {
+			self.updateFilter();
+		});
+	},
+	updateFilter: function () {
+		var uris = filter.pluck('uri');
+		this.$el.find('.item').css('display', 'none').each(function (i, el) {
+			var model = $(el).data('model');
+			if (model.get('type') == "artist") {
+				$(el).css('display', 'block');
+			} else if (model.get('type') == "album") {
+				if (uris.indexOf($(el).data('model').get('artist').uri) != -1) {
+					$(el).css('display', 'block');
+				}
+			}
 		});
 	},
 	render: function () {
@@ -136,7 +153,7 @@ var TrackList = Backbone.View.extend({
 	render: function () {
 		var tempPlaylist = new models.Playlist();
 		this.collection.filter(function (track) { 
-			if (filter.get(track.get('artists')[0].uri)) {
+			if (filter.get(track.get('album').artist.uri) && filter.get(track.get('album').uri)) {
 				return true; 
 			} else {
 				return false;
@@ -191,7 +208,7 @@ $(function(){
 	
 	// Load in users library
 	models.library.tracks.forEach(function (track) {
-		artistsCollection.add(new Item(track.data.artists[0]));
+		artistsCollection.add(new Item(track.data.album.artist));
 		albumsCollection.add(new Item(track.data.album));
 		
 		// Silent because adding is pretty slow if we do a lot at once
