@@ -108,7 +108,6 @@ var Column = Backbone.View.extend({
 			var element = $('<div class="item"></div>').html(added.get('name'));
 			element.data('model', added);
 			self.$el.find('.column-inner').append(element);
-			self.updateFilter();
 		});
 		filter.on('update', function () {
 			self.updateFilter();
@@ -126,15 +125,21 @@ var Column = Backbone.View.extend({
 				}
 			}
 		});
+		if (this.$el.find('.item').not(':hidden').length == 0) {
+			this.$el.find('.hint').show();
+		} else {
+			this.$el.find('.hint').hide();
+		}
 	},
 	render: function () {
 		this.$el.attr('tabindex', 0);
 		this.$el.append('<div class="title">'+this.options.title+'<span class="selall">[select all]</span></div>');
-		this.$el.append('<div class="column-scroll"><div class="column-inner"></div></div>');
+		this.$el.append('<div class="column-scroll"><div class="column-inner"><div class="hint">'+this.options.hint+'</div></div></div>');
 		return this;
 	}
 });
 
+var worker;
 var TrackList = Backbone.View.extend({
 	tagName: "div",
 	className: "tracks",
@@ -152,17 +157,26 @@ var TrackList = Backbone.View.extend({
 	},
 	render: function () {
 		var tempPlaylist = new models.Playlist();
-		this.collection.filter(function (track) { 
-			if (filter.get(track.get('album').artist.uri) && filter.get(track.get('album').uri)) {
-				return true; 
-			} else {
-				return false;
-			}
-		}).forEach(function (track) {
-			tempPlaylist.add(models.Track.fromURI(track.id));
-		});
 		var playlistList = new views.List(tempPlaylist, function (track) { return new views.Track(track, FIELD.ALBUM | FIELD.NAME | FIELD.ARTIST | FIELD.STAR | FIELD.DURATION);});
 		this.$el.empty().append('<div class="title"></div>').append(playlistList.node);
+		// Perform filtering in worker
+		if (worker) {
+			worker.terminate();
+			worker = null;
+		}
+		worker = new Worker("js/worker.js");
+		// Watch for messages from the worker
+		worker.onmessage = function (e){
+			JSON.parse(e.data).forEach(function (track) {
+				tempPlaylist.add(models.Track.fromURI(track));
+			});
+			worker.terminate();
+			worker = null;
+		};
+		worker.postMessage(JSON.stringify({
+			collection: this.collection,
+			filter: filter.pluck('uri')
+		}));
 		return this;
 	}
 });
@@ -177,7 +191,8 @@ $(function(){
 	albumsCollection = new Set();
 	var albumsView = new Column({
 		collection: albumsCollection,
-		title: "Albums"
+		title: "Albums",
+		hint: "Select at least one artist to view albums"
 	});
 	albumsView.render();
 	albumsView.$el.addClass('lastcolumn');
@@ -186,7 +201,8 @@ $(function(){
 	artistsCollection = new Set();
 	var artistsView = new Column({
 		collection: artistsCollection,
-		title: "Artists"
+		title: "Artists",
+		hint: "Select at least one playlist to view artists"
 	});
 	artistsView.render();
 	$('#columns').append(artistsView.el);
@@ -194,7 +210,8 @@ $(function(){
 	playlistCollection = new Set();
 	var playlistView = new Column({
 		collection: playlistCollection,
-		title: "Playlists"
+		title: "Playlists",
+		hint: "Drag playlists onto the app to see them here"
 	});
 	playlistView.render();
 	$('#columns').append(playlistView.el);
@@ -216,4 +233,5 @@ $(function(){
 	});
 	// Force a track list update
 	tracksCollection.trigger('update');
+	filter.trigger('update');
 });
