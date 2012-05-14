@@ -149,34 +149,46 @@ var TrackList = Backbone.View.extend({
 		var self = this;
 		// TODO: be cleverer
 		this.collection.on('all', function () {
-			self.render();
+			self.updateTracks();
 		});
 		filter.on('update', function () {
-			self.render();
+			self.updateTracks();
 		});
 	},
-	render: function () {
-		var tempPlaylist = new models.Playlist();
-		var playlistList = new views.List(tempPlaylist, function (track) { return new views.Track(track, FIELD.ALBUM | FIELD.NAME | FIELD.ARTIST | FIELD.STAR | FIELD.DURATION);});
-		this.$el.empty().append('<div class="title"></div>').append(playlistList.node);
+	updateTracks: function () {
 		// Perform filtering in worker
 		if (worker) {
 			worker.terminate();
 			worker = null;
 		}
 		worker = new Worker("js/worker.js");
+		var self = this;
 		// Watch for messages from the worker
 		worker.onmessage = function (e){
-			JSON.parse(e.data).forEach(function (track) {
-				tempPlaylist.add(models.Track.fromURI(track));
+			var data = JSON.parse(e.data);
+			data.add.forEach(function (track) {
+				self.tempPlaylist.add(models.Track.fromURI(track));
+				self.tracks.push(track);
+			});
+			data.remove.forEach(function (track) {
+				self.tempPlaylist.remove(models.Track.fromURI(track));
+				delete self.tracks[self.tracks.indexOf(track)];
 			});
 			worker.terminate();
 			worker = null;
+			self.tracks = self.tracks.filter(function (t) { return t != null })
 		};
 		worker.postMessage(JSON.stringify({
 			collection: this.collection,
-			filter: filter.pluck('uri')
+			filter: filter.pluck('uri'),
+			tracks: this.tracks
 		}));
+	},
+	render: function () {
+		this.tempPlaylist = new models.Playlist();
+		this.tracks = [];
+		var playlistList = new views.List(this.tempPlaylist, function (track) { return new views.Track(track, FIELD.ALBUM | FIELD.NAME | FIELD.ARTIST | FIELD.STAR | FIELD.DURATION);});
+		this.$el.empty().append('<div class="title"></div>').append(playlistList.node);
 		return this;
 	}
 });
